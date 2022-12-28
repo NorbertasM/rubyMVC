@@ -1,0 +1,15 @@
+<div class='card'>
+  <div class="card-header">
+    <h4>New channel</h4>
+  </div>
+  <div class="card-body">
+    <%= render "form", channel: @channel %>
+  </div>
+</div>
+
+<br>
+
+<div>
+  <%= link_to "Show this channel", @channel %> |
+  <%= link_to "Back to channels", channels_path %>
+</div>
