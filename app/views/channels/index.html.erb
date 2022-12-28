@@ -1,0 +1,11 @@
+<%= link_to "New channel", new_channel_path %>
+<div id="channels">
+  <div class="row gy-2">
+    <% @channels.each do |channel| %>
+      <div class="col">
+        <%= render channel %>
+      </div>
+    <% end %>
+  </div>
+</div>
+

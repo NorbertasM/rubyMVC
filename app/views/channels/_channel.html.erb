@@ -1,0 +1,22 @@
+<div class="card" style="width: 18rem;">
+  <img src=<%= channel.preview_url %> class="card-img-top" alt="...">
+  <div class="card-body">
+    <h5 class="card-title">
+      <%= channel.title %>
+    </h5>
+    <p class="card-text"> <%= channel.description %></p>
+    
+    <div class="row">
+      <div class="col-md-6 box text-start">
+        <div>
+          <%= link_to "More Info", channel, class:"btn btn-sm btn-outline-secondary" %>
+        </div>
+      </div>
+      <div class="col-md-6 box text-end">
+        <div>
+          <%= link_to "Watch Live!", channel.stream_link, class:"btn btn-sm btn-primary", target: :_blank %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
