@@ -1,0 +1,13 @@
+.crop {
+  height: 250px;
+  overflow: hidden;
+}
+
+.crop img {
+  height: 300px;
+}
+
+.channelDetail {
+  margin: auto;
+  width: 70rem;
+}

@@ -1,8 +1,30 @@
-<%= render @channel %>
-
- <% if @channel.user == current_user %> 
-  <div>
-    <%= link_to "Edit this channel", edit_channel_path(@channel) %> |
-    <%= link_to "Back to channels", channels_path %>
+<div class="card channelDetail">
+  <div class="crop">
+    <img src=<%= @channel.preview_url %> class="card-img-top" alt="...">
   </div>
-<%end%>
+  <div class="card-body">
+    <h3 class="card-title">
+      <%=@channel.title%>
+    </h3>
+    <p>
+      Streamer Name
+    <p>
+    <p> <%= @channel.description %></p>
+    
+    <p class="card-text">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur</p>
+    <div class="row">
+      <div class="col-md-6 box text-start">
+        <% if @channel.user == current_user %> 
+          <div>
+            <%= link_to "Edit", edit_channel_path(@channel), class:"btn btn-sm btn-outline-secondary" %>
+          </div>
+        <%end%>
+      </div>
+      <div class="col-md-6 box text-end">
+        <div>
+          <%= link_to "Watch Live!", @channel.stream_link, class:"btn btn-sm btn-primary", target: :_blank %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
