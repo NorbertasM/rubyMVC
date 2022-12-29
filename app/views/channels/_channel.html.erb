@@ -6,7 +6,12 @@
     </h5>
     <p class="card-text"> <%= channel.description %></p>
     
-    <div class="row">
+   <div class="border-bottom">
+      <% channel.games.each do |item| %>
+          <%= link_to item['name'], root_path(:game_id=> item["id"]), class:"mx-2" %>
+      <% end %>
+    </div>
+    <div class="row mt-1">
       <div class="col-md-6 box text-start">
         <div>
           <%= link_to "More Info", channel, class:"btn btn-sm btn-outline-secondary" %>

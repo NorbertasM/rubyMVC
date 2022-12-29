@@ -9,18 +9,34 @@ class ChannelsController < ApplicationController
     game_id = params["game_id"]
 
     if game_id.nil?
-      @channels = Channel.all
+      channels = Channel.all
     else
-      @channels = Array.new
+      channels = Array.new
       Channel.all.each { |x|
         x.channel_game.each { |channel_game|
           if channel_game.game_id == game_id.to_i
-            @channels.append(x)
+            channels.append(x)
           end
         }
       }
     end
 
+  @channels = Array.new
+
+  channels.each { |channel|
+    games = Array.new
+
+    channel.channel_game.each { |channel_game|
+      response = HTTParty.get("http://127.0.0.1:10000/game?id=" + channel_game["game_id"].to_s)
+
+      game = JSON.parse(response.body)
+
+      games.append(game)
+    }
+
+    channel.games =  games
+    @channels.append(channel)
+  }
   end
 
   # GET /channels/1 or /channels/1.json
