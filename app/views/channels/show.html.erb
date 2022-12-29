@@ -1,8 +1,8 @@
 <%= render @channel %>
 
-<div>
-  <%= link_to "Edit this channel", edit_channel_path(@channel) %> |
-  <%= link_to "Back to channels", channels_path %>
-
-  <%= button_to "Destroy this channel", @channel, method: :delete %>
-</div>
+ <% if @channel.user == current_user %> 
+  <div>
+    <%= link_to "Edit this channel", edit_channel_path(@channel) %> |
+    <%= link_to "Back to channels", channels_path %>
+  </div>
+<%end%>
