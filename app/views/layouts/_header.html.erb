@@ -26,7 +26,11 @@
             </li>
           <% else %> 
             <li class="nav-item px-5">
-              <%= link_to 'My channel', current_user.channel, class: "nav-link" %>
+              <% if current_user.channel %>
+                <%= link_to 'My channel', current_user.channel, class: "nav-link" %>
+              <% else %>
+                <%= link_to 'My channel', new_channel_path, class: "nav-link" %>
+              <% end %>
             </li>
             <li class="nav-item">
               <%= link_to 'Sign out', destroy_user_session_path, data: { "turbo-method": :delete }, class: "nav-link" %>
