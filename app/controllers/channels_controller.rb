@@ -2,14 +2,38 @@ class ChannelsController < ApplicationController
   before_action :set_channel, only: %i[ show edit update destroy ]
   before_action :authenticate_user!, except: [:index, :show]
   before_action :correct_user, only: [:edit, :update, :destroy]
+  after_action :test, only: [:create]
 
   # GET /channels or /channels.json
   def index
-    @channels = Channel.all
+    game_id = params["game_id"]
+
+    if game_id.nil?
+      @channels = Channel.all
+    else
+      @channels = Array.new
+      Channel.all.each { |x|
+        x.channel_game.each { |channel_game|
+          if channel_game.game_id == game_id.to_i
+            @channels.append(x)
+          end
+        }
+      }
+    end
+
   end
 
   # GET /channels/1 or /channels/1.json
   def show
+    @games = Array.new
+
+    @channel.channel_game.all.each { |x|
+      response = HTTParty.get("http://127.0.0.1:10000/game?id=" + x["game_id"].to_s)
+
+      game = JSON.parse(response.body)
+
+      @games.append(game)
+    }   
   end
 
   # GET /channels/new
@@ -20,7 +44,7 @@ class ChannelsController < ApplicationController
   # GET /channels/1/edit
   def edit
   end
-
+  
   # POST /channels or /channels.json
   def create
     @channel = Channel.new(channel_params.merge(user_id: current_user.id))
