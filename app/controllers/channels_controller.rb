@@ -1,5 +1,7 @@
 class ChannelsController < ApplicationController
   before_action :set_channel, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!, except: [:index, :show]
+  before_action :correct_user, only: [:edit, :update, :destroy]
 
   # GET /channels or /channels.json
   def index
@@ -21,7 +23,7 @@ class ChannelsController < ApplicationController
 
   # POST /channels or /channels.json
   def create
-    @channel = Channel.new(channel_params)
+    @channel = Channel.new(channel_params.merge(user_id: current_user.id))
 
     respond_to do |format|
       if @channel.save
@@ -57,6 +59,12 @@ class ChannelsController < ApplicationController
     end
   end
 
+  def correct_user
+    if current_user.channel.nil? || current_user.channel.id != params[:id].to_i
+      redirect_to channels_path, notice: "Not authorized"
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_channel
@@ -65,6 +73,6 @@ class ChannelsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def channel_params
-      params.require(:channel).permit(:title, :description, :stream_link, :preview_url)
+      params.require(:channel).permit(:title, :description, :stream_link, :preview_url, :user_id)
     end
 end
