@@ -1,0 +1,2 @@
+module ChannelTagsHelper
+end

@@ -2,9 +2,8 @@ class ChannelsController < ApplicationController
   before_action :set_channel, only: %i[ show edit update destroy ]
   before_action :authenticate_user!, except: [:index, :show]
   before_action :correct_user, only: [:edit, :update, :destroy]
-  after_action :test, only: [:create]
+  # after_action :test, only: [:create]
 
-  # GET /channels or /channels.json
   def index
     game_id = params["game_id"]
 
@@ -43,25 +42,36 @@ class ChannelsController < ApplicationController
   def show
     @games = Array.new
 
+    
+    @languages = Array.new
+    
+    response = HTTParty.get("http://127.0.0.1:10000/language?id=" + @channel.language_id.to_s )
+
+    @language = JSON.parse(response.body)
+
     @channel.channel_game.all.each { |x|
       response = HTTParty.get("http://127.0.0.1:10000/game?id=" + x["game_id"].to_s)
 
       game = JSON.parse(response.body)
 
       @games.append(game)
-    }   
+    }
   end
 
-  # GET /channels/new
   def new
-    @channel = Channel.new
+    if current_user.channel.nil?
+      @channel = Channel.new
+      get_langauges()
+    else
+      redirect_to channel_url(current_user.channel)
+    end
   end
 
   # GET /channels/1/edit
   def edit
+    get_langauges()
   end
   
-  # POST /channels or /channels.json
   def create
     @channel = Channel.new(channel_params.merge(user_id: current_user.id))
 
@@ -105,6 +115,16 @@ class ChannelsController < ApplicationController
     end
   end
 
+  def get_langauges
+    @languages = Array.new
+    
+    response = HTTParty.get("http://127.0.0.1:10000/language")
+
+    JSON.parse(response.body).each { |langauge|
+      @languages.append([langauge["name"], langauge["id"]])
+     }
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_channel
@@ -113,6 +133,6 @@ class ChannelsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def channel_params
-      params.require(:channel).permit(:title, :description, :stream_link, :preview_url, :user_id)
+      params.require(:channel).permit(:title, :description, :stream_link, :preview_url, :user_id, :language_id, :about)
     end
 end

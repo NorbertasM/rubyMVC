@@ -10,13 +10,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_29_102032) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_30_074827) do
   create_table "channel_games", force: :cascade do |t|
     t.integer "game_id"
     t.integer "channel_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["channel_id"], name: "index_channel_games_on_channel_id"
+  end
+
+  create_table "channel_statuses", force: :cascade do |t|
+    t.integer "channel_id"
+    t.integer "status_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["channel_id"], name: "index_channel_statuses_on_channel_id"
+  end
+
+  create_table "channel_tags", force: :cascade do |t|
+    t.integer "channel_id"
+    t.integer "tag_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["channel_id"], name: "index_channel_tags_on_channel_id"
   end
 
   create_table "channels", force: :cascade do |t|
@@ -27,7 +43,18 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_29_102032) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id"
+    t.text "about"
+    t.integer "language_id"
     t.index ["user_id"], name: "index_channels_on_user_id"
+  end
+
+  create_table "preview_statuses", force: :cascade do |t|
+    t.integer "channel_id"
+    t.integer "preview_id"
+    t.datetime "valid_until"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["channel_id"], name: "index_preview_statuses_on_channel_id"
   end
 
   create_table "users", force: :cascade do |t|

@@ -26,7 +26,6 @@ class ChannelGamesController < ApplicationController
   def create    
     game_ids = channel_game_params["games"]
 
-
     game_ids.each { |game_id|
       if !has_game(game_id)
         @channel_game = ChannelGame.new(channel_id: current_user.channel.id, game_id: game_id)
