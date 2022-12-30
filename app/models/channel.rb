@@ -6,4 +6,5 @@ class Channel < ApplicationRecord
   has_many :channel_tags
   has_one :channel_status
   attr_accessor :games
+  attr_accessor :language
 end

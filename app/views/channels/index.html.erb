@@ -1,4 +1,29 @@
 <div id="channels">
+  <div class="mb-2">
+    <%= select(
+      {},
+      {},
+      options_for_select(@languages ,:selected => params[:language_id].to_i,  ),
+      { :include_blank => true },
+      {
+        :onChange=>"
+          const params = new URLSearchParams(window.location.search)
+            if (this.value) {
+              if (!params.get('language_id')) {
+                params.append('language_id', this.value)
+              } else {
+                params.set('language_id', this.value)
+              }
+              window.location.search = params
+            } else if (params.get('language_id')) {
+              params.delete('language_id')
+              window.location.search = params
+            }
+          ",
+      }
+    ) %>
+
+  </div>
   <div class="row gy-2">
     <% @channels.each do |channel| %>
       <div class="col">

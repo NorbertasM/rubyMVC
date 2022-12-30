@@ -6,6 +6,9 @@ class ChannelsController < ApplicationController
 
   def index
     game_id = params["game_id"]
+    language_id = params["language_id"]
+
+    get_langauges()
 
     if game_id.nil?
       channels = Channel.all
@@ -20,34 +23,33 @@ class ChannelsController < ApplicationController
       }
     end
 
-  @channels = Array.new
+    @channels = Array.new
 
-  channels.each { |channel|
-    games = Array.new
+    channels.each { |channel|
+      if language_id.nil? || channel.language_id.to_i == language_id.to_i
+        games = Array.new
 
-    channel.channel_game.each { |channel_game|
-      response = HTTParty.get("http://127.0.0.1:10000/game?id=" + channel_game["game_id"].to_s)
+        channel.channel_game.each { |channel_game|
+          response = HTTParty.get("http://127.0.0.1:10000/game?id=" + channel_game["game_id"].to_s)
 
-      game = JSON.parse(response.body)
+          game = JSON.parse(response.body)
 
-      games.append(game)
+          games.append(game)
+        }
+
+        channel.language = get_language_by_id(channel["language_id"])
+
+        channel.games =  games
+        @channels.append(channel)
+      end
     }
-
-    channel.games =  games
-    @channels.append(channel)
-  }
   end
 
   # GET /channels/1 or /channels/1.json
   def show
     @games = Array.new
 
-    
-    @languages = Array.new
-    
-    response = HTTParty.get("http://127.0.0.1:10000/language?id=" + @channel.language_id.to_s )
-
-    @language = JSON.parse(response.body)
+    @language = get_language_by_id(@channel.language_id)
 
     @channel.channel_game.all.each { |x|
       response = HTTParty.get("http://127.0.0.1:10000/game?id=" + x["game_id"].to_s)
@@ -123,6 +125,12 @@ class ChannelsController < ApplicationController
     JSON.parse(response.body).each { |langauge|
       @languages.append([langauge["name"], langauge["id"]])
      }
+  end
+  
+  def get_language_by_id(id) 
+    response = HTTParty.get("http://127.0.0.1:10000/language?id=" + id.to_s )
+
+    return JSON.parse(response.body)
   end
 
   private
