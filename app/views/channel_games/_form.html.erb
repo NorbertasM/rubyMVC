@@ -10,16 +10,11 @@
       </ul>
     </div>
   <% end %>
-
-  <div>
-    <%= form.label :game_id, style: "display: block" %>
-    <%= form.number_field :game_id %>
-  </div>
-
-  <div>
-    <%= form.label :channel_id, style: "display: block" %>
-    <%= form.number_field :channel_id %>
-  </div>
+  
+ <% @options.each do |option| %>
+    <%= form.label option["name"] %>
+    <%=form.check_box :games, {multiple: true, skip_default_ids: false, class: "form-check-input", checked: !!current_user.channel.channel_game.find { |each| each.game_id == option["id"] } }, option["id"], nil %>  
+  <%end%>
 
   <div>
     <%= form.submit %>

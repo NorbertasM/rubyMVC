@@ -22,22 +22,28 @@ class ChannelGamesController < ApplicationController
   def edit
   end
 
-  # POST /channel_games or /channel_games.json
-  def create
-    @channel_game = ChannelGame.new(channel_game_params)
 
-    respond_to do |format|
-      if @channel_game.save
-        format.html { redirect_to channel_game_url(@channel_game), notice: "Channel game was successfully created." }
-        format.json { render :show, status: :created, location: @channel_game }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @channel_game.errors, status: :unprocessable_entity }
+  def create    
+    game_ids = channel_game_params["games"]
+
+
+    game_ids.each { |game_id|
+      if !has_game(game_id)
+        @channel_game = ChannelGame.new(channel_id: current_user.channel.id, game_id: game_id)
+        @channel_game.save
       end
-    end
+    }
+
+    current_user.channel.channel_game.each { |channel_game|
+      if !game_ids.include?(channel_game.game_id.to_s)
+        channel_game.destroy
+      end
+    }
+
+    redirect_to channel_url( current_user.channel)
   end
 
-  # PATCH/PUT /channel_games/1 or /channel_games/1.json
+
   def update
     respond_to do |format|
       if @channel_game.update(channel_game_params)
@@ -60,6 +66,10 @@ class ChannelGamesController < ApplicationController
     end
   end
 
+  def has_game(id)
+    return !!current_user.channel.channel_game.find { |each| each.game_id.to_i == id.to_i }
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_channel_game
@@ -68,6 +78,6 @@ class ChannelGamesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def channel_game_params
-      params.require(:channel_game).permit(:game_id, :channel_id)
+      params.require(:channel_game).permit(:games => [])
     end
 end
