@@ -33,8 +33,16 @@
       </p>
     <%end%>
 
+    <% if !@tags.nil? %>
+      <div class="border-bottom mb-3">
+        <% @tags.each do |item| %>
+            <%= link_to item['name'], root_path(:tag_id=> item["id"]), class:"mx-2" %>
+        <% end %>
+      </div>
+    <% end %>
+
     <div class="row">
-      <div class="col-md-6 box text-start">
+      <div class="col-md-8 box text-start">
         <% if @channel.user == current_user %> 
           <div class="row">
             <div class="col">
@@ -42,6 +50,9 @@
             </div>
             <div  class="col">
               <%= link_to "Manage Games", new_channel_game_path, class:"btn btn-sm btn-outline-primary" %>
+            </div>
+            <div  class="col">
+              <%= link_to "Manage Tags", new_channel_tag_path, class:"btn btn-sm btn-outline-primary" %>
             </div>
             <% if @preview.nil? || @preview["id"] != 17%> 
               <div class="col">
@@ -51,7 +62,7 @@
           </div>
         <%end%>
       </div>
-      <div class="col-md-6 box text-end">
+      <div class="col-md-4 box text-end">
         <div>
           <% if @channel.user != current_user %>
              <% if @status.nil? || @status["id"] != 16 %>

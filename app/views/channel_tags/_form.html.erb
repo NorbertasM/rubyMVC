@@ -10,18 +10,14 @@
       </ul>
     </div>
   <% end %>
+ 
+  <% @options.each do |option| %>
+    <%= form.label option["name"] %>
+    <%=form.check_box :tags, {multiple: true, skip_default_ids: false, class: "form-check-input", checked: !!current_user.channel.channel_tags.find { |each| each.tag_id == option["id"] } }, option["id"], nil %>  
+  <%end%>
 
-  <div>
-    <%= form.label :channel_id, style: "display: block" %>
-    <%= form.number_field :channel_id %>
-  </div>
-
-  <div>
-    <%= form.label :tag_id, style: "display: block" %>
-    <%= form.number_field :tag_id %>
-  </div>
-
-  <div>
-    <%= form.submit %>
+  <div class="mt-2">
+    <%= link_to "Cancel", channel_path(current_user.channel), class: "btn btn-outline-primary" %>
+    <%= form.submit "Confirm", class: "btn btn-primary"%>
   </div>
 <% end %>

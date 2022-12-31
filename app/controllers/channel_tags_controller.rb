@@ -13,6 +13,10 @@ class ChannelTagsController < ApplicationController
   # GET /channel_tags/new
   def new
     @channel_tag = ChannelTag.new
+
+    
+    response = HTTParty.get("http://127.0.0.1:10000/tag?forChannel=true")
+    @options = JSON.parse(response.body)
   end
 
   # GET /channel_tags/1/edit
@@ -21,17 +25,22 @@ class ChannelTagsController < ApplicationController
 
   # POST /channel_tags or /channel_tags.json
   def create
-    @channel_tag = ChannelTag.new(channel_tag_params)
+    tag_ids = channel_tag_params["tags"]
 
-    respond_to do |format|
-      if @channel_tag.save
-        format.html { redirect_to channel_tag_url(@channel_tag), notice: "Channel tag was successfully created." }
-        format.json { render :show, status: :created, location: @channel_tag }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @channel_tag.errors, status: :unprocessable_entity }
+    tag_ids.each{ |tag_id|
+      if !has_tag(tag_id)
+        @channel_tag = ChannelTag.new(channel_id: current_user.channel.id, tag_id: tag_id)
+        @channel_tag.save
       end
-    end
+    }
+
+    current_user.channel.channel_tags.each { |channel_tag|
+      if !tag_ids.include?(channel_tag.tag_id.to_s)
+        channel_tag.destroy
+      end
+    }
+
+    redirect_to channel_url(current_user.channel)
   end
 
   # PATCH/PUT /channel_tags/1 or /channel_tags/1.json
@@ -57,6 +66,11 @@ class ChannelTagsController < ApplicationController
     end
   end
 
+  def has_tag(id)
+    return !!current_user.channel.channel_tags.find { |each| each.tag_id.to_i == id.to_i }
+  end
+
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_channel_tag
@@ -65,6 +79,6 @@ class ChannelTagsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def channel_tag_params
-      params.require(:channel_tag).permit(:channel_id, :tag_id)
+      params.require(:channel_tag).permit(:tags => [])
     end
 end

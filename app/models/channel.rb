@@ -9,4 +9,5 @@ class Channel < ApplicationRecord
   attr_accessor :language
   attr_accessor :status
   attr_accessor :p_status
+  attr_accessor :tags
 end

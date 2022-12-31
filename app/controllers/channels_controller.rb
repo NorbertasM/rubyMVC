@@ -64,9 +64,8 @@ class ChannelsController < ApplicationController
   # GET /channels/1 or /channels/1.json
   def show
     @games = Array.new
-
+    @tags = Array.new
     @language = fetch_language_by_id(@channel.language_id)
-
     @status = get_channel_status(@channel.channel_status)
 
     latest_preview = @channel.preview_statuses.max_by {|e| e.created_at }
@@ -75,6 +74,14 @@ class ChannelsController < ApplicationController
       @preview = get_channel_status(@channel.preview_statuses)
       @preview_until = latest_preview["valid_until"].getlocal().to_formatted_s(:db)
     end
+
+    @channel.channel_tags.all.each { |x|
+      response = HTTParty.get("http://127.0.0.1:10000/tag?id=" + x["tag_id"].to_s)
+
+      tag = JSON.parse(response.body)
+
+      @tags.append(tag)
+    }
 
     @channel.channel_game.all.each { |x|
       response = HTTParty.get("http://127.0.0.1:10000/game?id=" + x["game_id"].to_s)
@@ -89,6 +96,7 @@ class ChannelsController < ApplicationController
     if current_user.channel.nil?
       @channel = Channel.new
       fetch_langauges()
+      fetch_channel_tags()
     else
       redirect_to channel_url(current_user.channel)
     end
@@ -99,12 +107,18 @@ class ChannelsController < ApplicationController
   end
   
   def create
-    @channel = Channel.new(channel_params.merge(user_id: current_user.id))
+    tags = channel_params["tags"]
+    @channel = Channel.new(channel_params.except("tags").merge(user_id: current_user.id))
 
     respond_to do |format|
       if @channel.save
         status = ChannelStatus.new(channel_id:@channel.id, status_id: 15)
         status.save
+
+        tags.each { |tag_id|
+          tag = ChannelTag.new(channel_id: @channel.id, tag_id: tag_id.to_i)
+          tag.save
+        }
 
         format.html { redirect_to channel_url(@channel), notice: "Channel was successfully created." }
         format.json { render :show, status: :created, location: @channel }
@@ -154,6 +168,13 @@ class ChannelsController < ApplicationController
     end
   end
 
+  def fetch_channel_tags
+    response = HTTParty.get("http://127.0.0.1:10000/tag?forChannel=true")
+
+    @tags =JSON.parse(response.body)
+  end
+
+
   def fetch_langauges
     @languages = Array.new
     
@@ -186,6 +207,6 @@ class ChannelsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def channel_params
-      params.require(:channel).permit(:title, :description, :stream_link, :preview_url, :user_id, :language_id, :about)
+      params.require(:channel).permit(:title, :description, :stream_link, :preview_url, :user_id, :language_id, :about, :tags => [])
     end
 end

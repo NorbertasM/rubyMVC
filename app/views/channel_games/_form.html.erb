@@ -13,10 +13,11 @@
   
  <% @options.each do |option| %>
     <%= form.label option["name"] %>
-    <%=form.check_box :games, {multiple: true, skip_default_ids: false, class: "form-check-input", checked: !!current_user.channel.channel_game.find { |each| each.game_id == option["id"] } }, option["id"], nil %>  
+    <%=form.check_box :games, {multiple: true, skip_default_ids: false, class: "form-check-input", checked: !!current_user.channel.channel_game.find { |each| each.game_id == option["id"] } }, option["id"], nil %> 
   <%end%>
 
-  <div>
-    <%= form.submit %>
+  <div class="mt-2">
+    <%= link_to "Cancel", channel_path(current_user.channel), class: "btn btn-outline-primary" %>
+    <%= form.submit "Confirm", class: "btn btn-primary"%>
   </div>
 <% end %>

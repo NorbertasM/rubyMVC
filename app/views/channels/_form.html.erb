@@ -41,6 +41,13 @@
     <%= select(:channel, :language_id, options_for_select(@languages, :selected => :language_id), { }, { :class => 'form-select' }) %>
   </div>
 
+  <% if !@tags.nil? %>
+    <% @tags.each do |tag| %>
+      <%= form.label tag["name"] %>
+      <%= form.check_box :tags, {multiple: true, skip_default_ids: false, class: "form-check-input", }, tag["id"], nil %>  
+    <% end %>
+  <% end %>
+
   <%
 =begin%>
  <% @options.each do |option| %>
