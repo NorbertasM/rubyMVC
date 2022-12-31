@@ -97,6 +97,9 @@ class ChannelsController < ApplicationController
       @channel = Channel.new
       fetch_langauges()
       fetch_channel_tags()
+      
+      response = HTTParty.get("http://127.0.0.1:10000/game")
+      @games = JSON.parse(response.body)
     else
       redirect_to channel_url(current_user.channel)
     end
@@ -108,7 +111,8 @@ class ChannelsController < ApplicationController
   
   def create
     tags = channel_params["tags"]
-    @channel = Channel.new(channel_params.except("tags").merge(user_id: current_user.id))
+    games = channel_params["games"]
+    @channel = Channel.new(channel_params.except("tags", "games").merge(user_id: current_user.id))
 
     respond_to do |format|
       if @channel.save
@@ -118,6 +122,11 @@ class ChannelsController < ApplicationController
         tags.each { |tag_id|
           tag = ChannelTag.new(channel_id: @channel.id, tag_id: tag_id.to_i)
           tag.save
+        }
+
+        games.each { |game_id|
+          game = ChannelGame.new(channel_id: @channel.id, game_id: game_id.to_i)
+          game.save
         }
 
         format.html { redirect_to channel_url(@channel), notice: "Channel was successfully created." }
@@ -207,6 +216,6 @@ class ChannelsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def channel_params
-      params.require(:channel).permit(:title, :description, :stream_link, :preview_url, :user_id, :language_id, :about, :tags => [])
+      params.require(:channel).permit(:title, :description, :stream_link, :preview_url, :user_id, :language_id, :about, :tags => [], :games => [])
     end
 end

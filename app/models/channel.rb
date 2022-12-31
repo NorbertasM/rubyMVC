@@ -10,4 +10,5 @@ class Channel < ApplicationRecord
   attr_accessor :status
   attr_accessor :p_status
   attr_accessor :tags
+  attr_accessor :games
 end
