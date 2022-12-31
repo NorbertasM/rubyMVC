@@ -5,15 +5,6 @@
       <%= channel.title %>
     </h5>
     <p class="card-text"> <%= channel.description %></p>
-    
-   <div class="border-bottom">
-      <% channel.games.each do |item| %>
-          <%= link_to item['name'], root_path(:game_id=> item["id"]), class:"mx-2" %>
-      <% end %>
-    </div>
-    <div class="border-bottom mt-2">
-      <%= channel.language["name"] %>
-    </div>
     <div class="row mt-1">
       <div class="col-md-6 box text-start">
         <div>
@@ -22,7 +13,11 @@
       </div>
       <div class="col-md-6 box text-end">
         <div>
-          <%= link_to "Watch Live!", channel.stream_link, class:"btn btn-sm btn-primary", target: :_blank %>
+          <% if !channel.status.nil? && channel.status["id"] == 16 %>
+            <%= link_to "Watch Live!", channel.stream_link, class:"btn btn-sm btn-primary", target: :_blank %>
+          <% else %>
+            <%= button_to "Offline!", {}, class:"btn btn-sm btn-outline-danger",:disabled => true %>
+          <% end %>
         </div>
       </div>
     </div>

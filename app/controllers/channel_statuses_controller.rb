@@ -22,14 +22,10 @@ class ChannelStatusesController < ApplicationController
   # POST /channel_statuses or /channel_statuses.json
   def create
     @channel_status = ChannelStatus.new(channel_status_params)
-
+    
     respond_to do |format|
       if @channel_status.save
-        format.html { redirect_to channel_status_url(@channel_status), notice: "Channel status was successfully created." }
-        format.json { render :show, status: :created, location: @channel_status }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @channel_status.errors, status: :unprocessable_entity }
+        redirect_to channel_url(channel_status_params["channel_id"])
       end
     end
   end
@@ -65,6 +61,6 @@ class ChannelStatusesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def channel_status_params
-      params.require(:channel_status).permit(:channel_id, :status_id)
+      params.permit(:channel_id, :status_id)
     end
 end
