@@ -13,7 +13,7 @@
       </div>
       <div class="col-md-6 box text-end">
         <div>
-          <% if !channel.status.nil? && channel.status["id"] == 16 %>
+          <% if !channel.status.nil? && channel.status == 16 %>
             <%= link_to "Watch Live!", channel.stream_link, class:"btn btn-sm btn-primary", target: :_blank %>
           <% else %>
             <%= button_to "Offline!", {}, class:"btn btn-sm btn-outline-danger",:disabled => true %>

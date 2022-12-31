@@ -1,6 +1,7 @@
 <%= form_with(model: preview_status) do |form| %>
-  <% if preview_status.errors.any? %>
-    <div style="color: red">
+
+  <% if @preview_status.errors.any? %>
+    <div class="alert alert-dager">
       <h2><%= pluralize(preview_status.errors.count, "error") %> prohibited this preview_status from being saved:</h2>
 
       <ul>
@@ -11,22 +12,31 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :channel_id, style: "display: block" %>
-    <%= form.number_field :channel_id %>
+  <div class="form-group">
+    <%= form.label "Duration", style: "display: block" %>
+    <%= select(:preview_status, :duration, options_for_select(@options), { }, { :class => 'form-select', :onChange=>"
+            const priceElement = document.getElementById('price')
+
+            if (priceElement) {
+              if (this.value < 6) {
+                priceElement.innerHTML = 'price ' + (this.value * 3) + '€'
+               } else if (this.value < 12) {
+                 priceElement.innerHTML = 'price ' + (this.value * 2.5) + '€'
+               } else {
+                 priceElement.innerHTML = 'price ' + (this.value * 2) + '€'
+              }
+            }
+          ", }) %>
   </div>
 
-  <div>
-    <%= form.label :preview_id, style: "display: block" %>
-    <%= form.number_field :preview_id %>
-  </div>
+  <p id="price" class="mt-2 text-info" style="font-weight: bold;">Price: 1€</p>
 
-  <div>
-    <%= form.label :valid_until, style: "display: block" %>
-    <%= form.datetime_field :valid_until %>
-  </div>
-
-  <div>
-    <%= form.submit %>
+  <div class="mt-3 row">
+    <div class="col">
+      <%= link_to "Cancel", current_user.channel, class: "btn btn-outline-primary"%>
+    </div>
+    <div class="col text-end">
+      <%= form.submit "Order", class: "btn btn-primary"%>
+    </div>
   </div>
 <% end %>

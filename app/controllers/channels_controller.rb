@@ -13,21 +13,52 @@ class ChannelsController < ApplicationController
       channels = Channel.all
     else
       channels = Array.new
-      Channel.all.each { |x|
-        x.channel_game.each { |channel_game|
+      Channel.all.each { |channel|
+        channel.channel_game.each { |channel_game|
           if channel_game.game_id == game_id.to_i
-            channels.append(x)
+            channels.append(channel)
           end
         }
       }
     end
 
-    @channels = Array.new
+    full_channels = Array.new
     
     channels.each { |channel|
-      channel.status = get_channel_status(channel.channel_status)
-        @channels.append(channel)
+      if language_id.nil? || channel.language_id.to_i == language_id.to_i
+      
+        status = get_channel_status(channel.channel_status)
+        if !status.nil?
+          channel.status = status["id"] 
+        else
+          channel.status = 15
+        end
+
+        preview_status = get_channel_status(channel.preview_statuses)
+
+        if preview_status.nil?
+          channel.p_status = 0
+        else
+          channel.p_status = preview_status["id"]
+        end
+
+        full_channels.append(channel)
+      end
     }
+
+    @vip_channels = Array.new
+    @channels = Array.new
+
+    full_channels.each { |channel|
+      if channel.p_status == 17
+        @vip_channels.append(channel)
+      else
+        @channels.append(channel)
+      end
+    }
+
+    @vip_channels = @vip_channels.sort_by{|e| -e.status}
+    @channels = @channels.sort_by{|e| -e.status}
   end
 
   # GET /channels/1 or /channels/1.json
@@ -37,6 +68,13 @@ class ChannelsController < ApplicationController
     @language = fetch_language_by_id(@channel.language_id)
 
     @status = get_channel_status(@channel.channel_status)
+
+    latest_preview = @channel.preview_statuses.max_by {|e| e.created_at }
+
+    if !latest_preview.nil? && latest_preview["valid_until"].to_date > Date.today
+      @preview = get_channel_status(@channel.preview_statuses)
+      @preview_until = latest_preview["valid_until"].getlocal().to_formatted_s(:db)
+    end
 
     @channel.channel_game.all.each { |x|
       response = HTTParty.get("http://127.0.0.1:10000/game?id=" + x["game_id"].to_s)

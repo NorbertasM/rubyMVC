@@ -13,6 +13,8 @@ class PreviewStatusesController < ApplicationController
   # GET /preview_statuses/new
   def new
     @preview_status = PreviewStatus.new
+
+    @options = [["1 month", 1], ["2 month", 2], ["3 month", 3], ["6 month", 6], ["12 month", 12]]
   end
 
   # GET /preview_statuses/1/edit
@@ -21,16 +23,13 @@ class PreviewStatusesController < ApplicationController
 
   # POST /preview_statuses or /preview_statuses.json
   def create
-    @preview_status = PreviewStatus.new(preview_status_params)
+    valid_until = DateTime.now.months_since(preview_status_params[:duration].to_i)
+    @preview_status = PreviewStatus.new(valid_until: valid_until, channel_id: current_user.channel.id, status_id: 17)
 
-    respond_to do |format|
-      if @preview_status.save
-        format.html { redirect_to preview_status_url(@preview_status), notice: "Preview status was successfully created." }
-        format.json { render :show, status: :created, location: @preview_status }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @preview_status.errors, status: :unprocessable_entity }
-      end
+    if @preview_status.save
+      redirect_to channel_path(current_user.channel.id)
+    else
+      render :new, status: :bad_request
     end
   end
 
@@ -65,6 +64,6 @@ class PreviewStatusesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def preview_status_params
-      params.require(:preview_status).permit(:channel_id, :preview_id, :valid_until)
+      params.require(:preview_status).permit(:duration)
     end
 end

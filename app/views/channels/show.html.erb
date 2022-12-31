@@ -16,15 +16,22 @@
 
     <span>Stream language: <%= @language["name"]%></span>
 
-    <h4 class="border-bottom">
+    <h4 class="border-bottom mb-2">
       Games
     </h4>
-    <div class="border-bottom">
+    <div class="border-bottom mb-3">
       <% @games.each do |item| %>
           <%= link_to item['name'], root_path(:game_id=> item["id"]), class:"mx-2" %>
       <% end %>
     </div>
-    <br />
+
+    <% if @channel.user == current_user && !@preview.nil? && @preview %> 
+      <p style="font-weight: bold;">
+        <%= @preview["label"] %>
+          until:
+        <%= @preview_until %>
+      </p>
+    <%end%>
 
     <div class="row">
       <div class="col-md-6 box text-start">
@@ -36,6 +43,11 @@
             <div  class="col">
               <%= link_to "Manage Games", new_channel_game_path, class:"btn btn-sm btn-outline-primary" %>
             </div>
+            <% if @preview.nil? || @preview["id"] != 17%> 
+              <div class="col">
+                <%= link_to "Order Premium!", new_preview_status_path, class:"btn btn-sm btn-primary" %>
+              </div>
+            <%end %>
           </div>
         <%end%>
       </div>

@@ -25,9 +25,16 @@
     ) %>
 
   </div>
+  <div class="row justify-content-md-start gy-2 mb-4">
+    <% @vip_channels.each do |channel| %>
+      <div class="col-md-3">
+        <%= render channel %>
+      </div>
+    <% end %>
+  </div>
   <div class="row gy-2">
     <% @channels.each do |channel| %>
-      <div class="col">
+      <div class="col-md-3">
         <%= render channel %>
       </div>
     <% end %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_30_074827) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_31_090753) do
   create_table "channel_games", force: :cascade do |t|
     t.integer "game_id"
     t.integer "channel_id", null: false
@@ -50,7 +50,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_30_074827) do
 
   create_table "preview_statuses", force: :cascade do |t|
     t.integer "channel_id"
-    t.integer "preview_id"
+    t.integer "status_id"
     t.datetime "valid_until"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
