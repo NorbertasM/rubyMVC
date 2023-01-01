@@ -25,3 +25,19 @@
   cursor: pointer;
   box-shadow: 1px 1px 1px lightgray;
 }
+
+.custom-alert {
+  position: fixed !important;
+  top: 40px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 1;
+}
+
+.custom-notification {
+  position: fixed !important;
+  top: 110px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 1;
+}
