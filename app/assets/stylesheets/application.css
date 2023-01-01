@@ -22,22 +22,27 @@
 }
 
 .tag-badge:hover {
-  cursor: pointer;
   box-shadow: 1px 1px 1px lightgray;
+  cursor: pointer;
 }
 
 .custom-alert {
-  position: fixed !important;
-  top: 40px;
   left: 50%;
+  position: fixed !important;
+  text-align: center;
+  top: 40px;
   transform: translate(-50%, 0);
+  width: 500px;
   z-index: 1;
 }
 
 .custom-notification {
-  position: fixed !important;
-  top: 110px;
   left: 50%;
+  position: fixed !important;
+  text-align: center;
+  top: 110px;
   transform: translate(-50%, 0);
+  width: 500px;
+  width: 500px;
   z-index: 1;
 }
