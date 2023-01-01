@@ -4,8 +4,10 @@
       <div class="col">
       <%= link_to root_path(:game_id=> item["id"]), class: "undecoratedLink" do %>
         <div class="card customCard" style="width: 18rem;">
-          <img src=<%= item['image'] %> class="card-img-top" alt="...">
-          <div class="card-body">
+          <div class="card-image-container">
+            <img src=<%= item['image'] %> class="card-img-top" alt="...">
+          </div>
+          <div class="card-body game-card-body-container">
             <h5 class="card-title">
               <%= item['name'] %>
             </h5>

@@ -1,11 +1,15 @@
 <div class="card" style="width: 18rem;">
-  <img src=<%= channel.preview_url %> class="card-img-top" alt="...">
-  <div class="card-body">
-    <h5 class="card-title">
-      <%= channel.title %>
-    </h5>
-    <p class="card-text"> <%= channel.description %></p>
-    <div class="row mt-1">
+  <div class="card-image-container">
+    <img src=<%= channel.preview_url %> class="card-img-top" alt="...">
+  </div>
+  <div class="card-body channel-card-body-container">
+    <div class="channel-card-description-container">
+      <h5 class="card-title">
+        <%= channel.title %>
+      </h5>
+      <p class="card-text" style="text-overflow: ellipsis; max-height: 5px;"> <%= channel.description %></p>
+    </div>
+    <div class="row mt-1 border-top py-1">
       <div class="col-md-6 box text-start">
         <div>
           <%= link_to "More Info", channel, class:"btn btn-sm btn-outline-secondary" %>

@@ -3,8 +3,9 @@
   overflow: hidden;
 }
 
-.crop img {
+.crop {
   height: 300px;
+  overflow: hidden;
 }
 
 .channelDetail {
@@ -22,6 +23,45 @@
 }
 
 .tag-badge:hover {
-  cursor: pointer;
   box-shadow: 1px 1px 1px lightgray;
+  cursor: pointer;
+}
+
+.custom-alert {
+  left: 50%;
+  position: fixed !important;
+  text-align: center;
+  top: 40px;
+  transform: translate(-50%, 0);
+  width: 500px;
+  z-index: 1;
+}
+
+.custom-notification {
+  left: 50%;
+  position: fixed !important;
+  text-align: center;
+  top: 110px;
+  transform: translate(-50%, 0);
+  width: 500px;
+  width: 500px;
+  z-index: 1;
+}
+
+.card-image-container {
+  height: 120px;
+  overflow: hidden;
+}
+
+.game-card-body-container {
+  height: 70px
+}
+
+.channel-card-body-container {
+  height: 160px;
+}
+
+.channel-card-description-container {
+  height: 100px;
+  overflow: hidden;
 }
