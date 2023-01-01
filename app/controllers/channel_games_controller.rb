@@ -9,7 +9,7 @@ class ChannelGamesController < ApplicationController
     if response.code == 200 
       @options = JSON.parse(response.body)
     else
-        flash[:alert] = "Error fetching games <br /> #{response.message}".html_safe
+      flash[:alert] = "Error fetching games <br /> #{response.message}".html_safe
     end
   end
 
