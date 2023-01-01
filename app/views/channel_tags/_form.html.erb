@@ -1,20 +1,20 @@
 <%= form_with(model: channel_tag) do |form| %>
   <% if channel_tag.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(channel_tag.errors.count, "error") %> prohibited this channel_tag from being saved:</h2>
-
+    <%= render layout: 'shared/error_modal' do %>
       <ul>
-        <% channel_tag.errors.each do |error| %>
+        <% channel.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
       </ul>
-    </div>
-  <% end %>
+    <% end %>
+  <% end%>
  
-  <% @options.each do |option| %>
-    <%= form.label option["name"] %>
-    <%=form.check_box :tags, {multiple: true, skip_default_ids: false, class: "form-check-input", checked: !!current_user.channel.channel_tags.find { |each| each.tag_id == option["id"] } }, option["id"], nil %>  
-  <%end%>
+  <% if !@options.nil? %>
+    <% @options.each do |option| %>
+      <%= form.label option["name"] %>
+      <%=form.check_box :tags, {multiple: true, skip_default_ids: false, class: "form-check-input", checked: !!current_user.channel.channel_tags.find { |each| each.tag_id == option["id"] } }, option["id"], nil %>  
+    <%end%>
+  <% end %>
 
   <div class="mt-2">
     <%= link_to "Cancel", channel_path(current_user.channel), class: "btn btn-outline-primary" %>

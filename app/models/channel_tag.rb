@@ -1,4 +1,4 @@
 class ChannelTag < ApplicationRecord
   belongs_to :channel
-  attr_accessor :tags
+  attr_accessor :tags  
 end
