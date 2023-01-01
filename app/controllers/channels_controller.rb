@@ -6,26 +6,52 @@ class ChannelsController < ApplicationController
   def index
     game_id = params["game_id"]
     language_id = params["language_id"]
+    param_tags = params["tag_id"]
 
     fetch_langauges()
 
-    if game_id.nil?
-      channels = Channel.all
+    tags = fetch_all_tags()
+
+    @option_tags = Array.new
+    @selected_tags = Array.new
+
+    if param_tags
+      tags.each { |tag|
+        if param_tags.include?(tag["id"].to_s)
+          @selected_tags.append(tag)
+        else
+          @option_tags.append([tag["name"], tag["id"]])
+        end
+      }
     else
-      channels = Array.new
-      Channel.all.each { |channel|
-        channel.channel_game.each { |channel_game|
-          if channel_game.game_id == game_id.to_i
-            channels.append(channel)
-          end
-        }
+      tags.each { |tag|
+        @option_tags.append([tag["name"], tag["id"]])
       }
     end
 
-    full_channels = Array.new
+    @vip_channels = Array.new
+    @channels = Array.new
     
-    channels.each { |channel|
-      if language_id.nil? || channel.language_id.to_i == language_id.to_i
+    Channel.all.each { |channel|
+      has_tag = @selected_tags.count == 0 || channel.channel_tags.any? { |channel_tag|
+        @selected_tags.any? { |selected_tag|
+          if selected_tag["forChannel"]
+            selected_tag["id"] == channel_tag["tag_id"]
+          else
+            fetch_games_by_tag_id(selected_tag["id"]).any? { |game|
+              channel.channel_game.any?{ |channel_game|
+                game["id"] == channel_game["game_id"]
+              }
+            }
+          end
+        }
+      }
+
+      has_game = game_id.nil? || channel.channel_game.any? { |channel_game|
+        channel_game.game_id.to_s == game_id
+      }
+
+      if (language_id.nil? || channel.language_id.to_i == language_id.to_i) && has_tag && has_game
       
         status = get_channel_status(channel.channel_status)
         if !status.nil?
@@ -36,24 +62,18 @@ class ChannelsController < ApplicationController
 
         preview_status = get_channel_status(channel.preview_statuses)
 
-        if preview_status.nil?
+        if !preview_status.nil? && preview_status["id"] == 17
           channel.p_status = 0
+          @vip_channels.append(channel)
         else
-          channel.p_status = preview_status["id"]
+          if preview_status.nil?
+            channel.p_status = 0
+          else
+            channel.p_status = preview_status["id"]
+          end
+
+          @channels.append(channel)
         end
-
-        full_channels.append(channel)
-      end
-    }
-
-    @vip_channels = Array.new
-    @channels = Array.new
-
-    full_channels.each { |channel|
-      if channel.p_status == 17
-        @vip_channels.append(channel)
-      else
-        @channels.append(channel)
       end
     }
 
@@ -181,6 +201,18 @@ class ChannelsController < ApplicationController
     response = HTTParty.get("http://127.0.0.1:10000/tag?forChannel=true")
 
     @tags =JSON.parse(response.body)
+  end
+  
+  def fetch_all_tags
+    response = HTTParty.get("http://127.0.0.1:10000/tag")
+  
+    return JSON.parse(response.body)
+  end
+
+  def fetch_games_by_tag_id(tag_id)
+    response = HTTParty.get("http://127.0.0.1:10000/game?tagId=" + tag_id.to_s)
+  
+    return JSON.parse(response.body)
   end
 
 
