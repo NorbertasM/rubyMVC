@@ -164,6 +164,7 @@ class ChannelsController < ApplicationController
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @channel.errors, status: :unprocessable_entity }
+        fetch_langauges()
       end
     end
   end
