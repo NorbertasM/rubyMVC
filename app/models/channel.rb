@@ -10,5 +10,13 @@ class Channel < ApplicationRecord
   attr_accessor :status
   attr_accessor :p_status
   attr_accessor :tags
-  attr_accessor :games
+
+  validates_presence_of :about
+  validates_presence_of :description
+  validates_presence_of :language_id
+
+  validates :title, presence: true, length: { maximum: 35 }
+
+  validates :preview_url, presence: true, format: { with: /^(ftp|http|https):\/\/[^ "]+$/, multiline: true, message: "Invalid URL format" }
+  validates :stream_link, presence: true, format: { with: /^(ftp|http|https):\/\/[^ "]+$/, multiline: true, message: "Invalid URL format" }
 end

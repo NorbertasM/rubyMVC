@@ -115,11 +115,7 @@ class ChannelsController < ApplicationController
   def new
     if current_user.channel.nil?
       @channel = Channel.new
-      fetch_langauges()
-      fetch_channel_tags()
-      
-      response = HTTParty.get("http://127.0.0.1:10000/game")
-      @games = JSON.parse(response.body)
+      fetch_new_channel_form_data()
     else
       redirect_to channel_url(current_user.channel)
     end
@@ -153,7 +149,8 @@ class ChannelsController < ApplicationController
         format.json { render :show, status: :created, location: @channel }
       else
         format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @channel.errors, status: :unprocessable_entity }
+        format.json { render :new, json: @channel.errors, status: :unprocessable_entity }
+        fetch_new_channel_form_data()
       end
     end
   end
@@ -239,6 +236,15 @@ class ChannelsController < ApplicationController
       return JSON.parse(response.body)
     end
   end
+
+  def fetch_new_channel_form_data
+    fetch_langauges()
+    fetch_channel_tags()
+    
+    response = HTTParty.get("http://127.0.0.1:10000/game")
+    @games = JSON.parse(response.body)
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
