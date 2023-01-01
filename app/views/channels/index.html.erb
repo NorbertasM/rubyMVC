@@ -1,10 +1,71 @@
 <div id="channels">
+  <div class="mb-2">
+    <label>Language</label>
+    <%= select(
+      {},
+      {},
+      options_for_select(@languages ,:selected => params[:language_id].to_i,  ),
+      { :include_blank => true },
+      {
+        :onChange=>"
+          const params = new URLSearchParams(window.location.search)
+            if (this.value) {
+              if (!params.get('language_id')) {
+                params.append('language_id', this.value)
+              } else {
+                params.set('language_id', this.value)
+              }
+              window.location.search = params
+            } else if (params.get('language_id')) {
+              params.delete('language_id')
+              window.location.search = params
+            }
+          ",
+      }
+    ) %>
+
+    
+    <label>Tags</label>
+    <%= select(
+      {},
+      {},
+      options_for_select(@option_tags  ),
+      { :include_blank => true },
+      {
+        :onChange=>"
+          const params = new URLSearchParams(window.location.search)
+            if (this.value) {
+              params.append('tag_id[]', this.value)
+              window.location.search = params
+            }
+          ",
+      }
+    ) %>
+  </div>
+
+  <span id="tags-container">
+    <% @selected_tags.each do |tag|%>
+      <span
+        id=<%= tag['id']%>
+        class="badge rounded-pill text-bg-primary tag-badge"
+      >
+        <%= tag["name"]%> X
+      </span>
+    <%end%>
+  </span>
+
+  <div class="row justify-content-md-start gy-2 mb-4">
+    <% @vip_channels.each do |channel| %>
+      <div class="col-md-3">
+        <%= render channel %>
+      </div>
+    <% end %>
+  </div>
   <div class="row gy-2">
     <% @channels.each do |channel| %>
-      <div class="col">
+      <div class="col-md-3">
         <%= render channel %>
       </div>
     <% end %>
   </div>
 </div>
-

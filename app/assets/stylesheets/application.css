@@ -11,3 +11,17 @@
   margin: auto;
   width: 70rem;
 }
+
+.customCard:hover {
+  box-shadow: 1px 1px 1px lightgray;
+}
+
+.undecoratedLink {
+  color: black;
+  text-decoration: unset !important;
+}
+
+.tag-badge:hover {
+  cursor: pointer;
+  box-shadow: 1px 1px 1px lightgray;
+}

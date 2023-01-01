@@ -1,0 +1,23 @@
+<%= form_with(model: channel_game) do |form| %>
+  <% if channel_game.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(channel_game.errors.count, "error") %> prohibited this channel_game from being saved:</h2>
+
+      <ul>
+        <% channel_game.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
+ <% @options.each do |option| %>
+    <%= form.label option["name"] %>
+    <%=form.check_box :games, {multiple: true, skip_default_ids: false, class: "form-check-input", checked: !!current_user.channel.channel_game.find { |each| each.game_id == option["id"] } }, option["id"], nil %> 
+  <%end%>
+
+  <div class="mt-2">
+    <%= link_to "Cancel", channel_path(current_user.channel), class: "btn btn-outline-primary" %>
+    <%= form.submit "Confirm", class: "btn btn-primary"%>
+  </div>
+<% end %>

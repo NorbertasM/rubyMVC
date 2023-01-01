@@ -1,0 +1,23 @@
+<%= form_with(model: channel_tag) do |form| %>
+  <% if channel_tag.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(channel_tag.errors.count, "error") %> prohibited this channel_tag from being saved:</h2>
+
+      <ul>
+        <% channel_tag.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+ 
+  <% @options.each do |option| %>
+    <%= form.label option["name"] %>
+    <%=form.check_box :tags, {multiple: true, skip_default_ids: false, class: "form-check-input", checked: !!current_user.channel.channel_tags.find { |each| each.tag_id == option["id"] } }, option["id"], nil %>  
+  <%end%>
+
+  <div class="mt-2">
+    <%= link_to "Cancel", channel_path(current_user.channel), class: "btn btn-outline-primary" %>
+    <%= form.submit "Confirm", class: "btn btn-primary"%>
+  </div>
+<% end %>

@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @channel_game %>
+
+<div>
+  <%= link_to "Edit this channel game", edit_channel_game_path(@channel_game) %> |
+  <%= link_to "Back to channel games", channel_games_path %>
+
+  <%= button_to "Destroy this channel game", @channel_game, method: :delete %>
+</div>

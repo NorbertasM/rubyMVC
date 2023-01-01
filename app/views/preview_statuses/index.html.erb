@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Preview statuses</h1>
+
+<div id="preview_statuses">
+  <% @preview_statuses.each do |preview_status| %>
+    <%= render preview_status %>
+    <p>
+      <%= link_to "Show this preview status", preview_status %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New preview status", new_preview_status_path %>

@@ -11,18 +11,72 @@
     <p>
     <p> <%= @channel.description %></p>
     
-    <p class="card-text">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur</p>
+    <h4>About Streamer</h4>
+    <p class="card-text"><%= @channel.about%></p>
+
+    <span>Stream language: <%= @language["name"]%></span>
+
+    <h4 class="border-bottom mb-2">
+      Games
+    </h4>
+    <div class="border-bottom mb-3">
+      <% @games.each do |item| %>
+          <%= link_to item['name'], root_path(:game_id=> item["id"]), class:"mx-2" %>
+      <% end %>
+    </div>
+
+    <% if @channel.user == current_user && !@preview.nil? && @preview %> 
+      <p style="font-weight: bold;">
+        <%= @preview["label"] %>
+          until:
+        <%= @preview_until %>
+      </p>
+    <%end%>
+
+    <% if !@tags.nil? %>
+      <div class="border-bottom mb-3">
+        <% @tags.each do |item| %>
+            <%= link_to item['name'], root_path(["tag_id[]"] => item["id"]), class:"mx-2" %>
+        <% end %>
+      </div>
+    <% end %>
+
     <div class="row">
-      <div class="col-md-6 box text-start">
+      <div class="col-md-8 box text-start">
         <% if @channel.user == current_user %> 
-          <div>
-            <%= link_to "Edit", edit_channel_path(@channel), class:"btn btn-sm btn-outline-secondary" %>
+          <div class="row">
+            <div class="col">
+              <%= link_to "Edit", edit_channel_path(@channel), class:"btn btn-sm btn-outline-secondary" %>
+            </div>
+            <div  class="col">
+              <%= link_to "Manage Games", new_channel_game_path, class:"btn btn-sm btn-outline-primary" %>
+            </div>
+            <div  class="col">
+              <%= link_to "Manage Tags", new_channel_tag_path, class:"btn btn-sm btn-outline-primary" %>
+            </div>
+            <% if @preview.nil? || @preview["id"] != 17%> 
+              <div class="col">
+                <%= link_to "Order Premium!", new_preview_status_path, class:"btn btn-sm btn-primary" %>
+              </div>
+            <%end %>
           </div>
         <%end%>
       </div>
-      <div class="col-md-6 box text-end">
+      <div class="col-md-4 box text-end">
         <div>
-          <%= link_to "Watch Live!", @channel.stream_link, class:"btn btn-sm btn-primary", target: :_blank %>
+          <% if @channel.user != current_user %>
+             <% if @status.nil? || @status["id"] != 16 %>
+              <%= button_to "Offline", {}, class:"btn btn-sm btn-outline-danger", :disabled => true %>
+            <% else %>
+              <%= link_to "Watch Live!", @channel.stream_link, class:"btn btn-sm btn-primary", target: :_blank %>
+            <% end %>
+          <% else %>
+            <% if @status.nil? || @status["id"] != 16 %>
+              <%= button_to "Go Live!", { :controller => 'channel_statuses', :channel_id => @channel.id, :status_id => 16}, :method => :post, class: "btn btn-sm btn-success" %> 
+            <% else %>
+              <%= button_to "Go Offline!", { :controller => 'channel_statuses', :channel_id => @channel.id, :status_id => 15}, :method => :post, class: "btn btn-sm btn-danger" %> 
+            <% end %>
+          <% end %>
         </div>
       </div>
     </div>

@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @channel_tag %>
+
+<div>
+  <%= link_to "Edit this channel tag", edit_channel_tag_path(@channel_tag) %> |
+  <%= link_to "Back to channel tags", channel_tags_path %>
+
+  <%= button_to "Destroy this channel tag", @channel_tag, method: :delete %>
+</div>

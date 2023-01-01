@@ -1,0 +1,18 @@
+<div id="games">
+  <div class="row gy-2">
+    <% @games.each do |item| %>
+      <div class="col">
+      <%= link_to root_path(:game_id=> item["id"]), class: "undecoratedLink" do %>
+        <div class="card customCard" style="width: 18rem;">
+          <img src=<%= item['image'] %> class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">
+              <%= item['name'] %>
+            </h5>
+          </div>
+        </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Channel statuses</h1>
+
+<div id="channel_statuses">
+  <% @channel_statuses.each do |channel_status| %>
+    <%= render channel_status %>
+    <p>
+      <%= link_to "Show this channel status", channel_status %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New channel status", new_channel_status_path %>
