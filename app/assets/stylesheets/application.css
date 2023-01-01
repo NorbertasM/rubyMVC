@@ -3,8 +3,9 @@
   overflow: hidden;
 }
 
-.crop img {
+.crop {
   height: 300px;
+  overflow: hidden;
 }
 
 .channelDetail {
@@ -45,4 +46,22 @@
   width: 500px;
   width: 500px;
   z-index: 1;
+}
+
+.card-image-container {
+  height: 120px;
+  overflow: hidden;
+}
+
+.game-card-body-container {
+  height: 70px
+}
+
+.channel-card-body-container {
+  height: 160px;
+}
+
+.channel-card-description-container {
+  height: 100px;
+  overflow: hidden;
 }

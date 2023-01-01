@@ -12,10 +12,10 @@ class Channel < ApplicationRecord
   attr_accessor :tags
 
   validates_presence_of :about
-  validates_presence_of :description
   validates_presence_of :language_id
 
-  validates :title, presence: true, length: { maximum: 35 }
+  validates :title, presence: true, length: { maximum: 20 }
+  validates :description, presence: true, length: { maximum: 100 }
 
   validates :preview_url, presence: true, format: { with: /^(ftp|http|https):\/\/[^ "]+$/, multiline: true, message: "Invalid URL format" }
   validates :stream_link, presence: true, format: { with: /^(ftp|http|https):\/\/[^ "]+$/, multiline: true, message: "Invalid URL format" }
