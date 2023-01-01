@@ -81,7 +81,6 @@ class ChannelsController < ApplicationController
     @channels = @channels.sort_by{|e| -e.status}
   end
 
-  # GET /channels/1 or /channels/1.json
   def show
     @games = Array.new
     @tags = Array.new
