@@ -57,12 +57,12 @@ class ChannelsController < ApplicationController
         if !status.nil?
           channel.status = status["id"] 
         else
-          channel.status = 15
+          channel.status = 3
         end
 
         preview_status = get_channel_status(channel.preview_statuses)
 
-        if !preview_status.nil? && preview_status["id"] == 17
+        if !preview_status.nil? && preview_status["id"] == 1
           channel.p_status = 0
           @vip_channels.append(channel)
         else
@@ -97,7 +97,9 @@ class ChannelsController < ApplicationController
     @channel.channel_tags.all.each { |x|
       response = HTTParty.get("http://127.0.0.1:10000/tag?id=" + x["tag_id"].to_s)
 
-      tag = JSON.parse(response.body)
+      if response.code === 200
+        tag = JSON.parse(response.body)
+      end
 
       @tags.append(tag)
     }
@@ -131,7 +133,7 @@ class ChannelsController < ApplicationController
 
     respond_to do |format|
       if @channel.save
-        status = ChannelStatus.new(channel_id:@channel.id, status_id: 15)
+        status = ChannelStatus.new(channel_id:@channel.id, status_id: 3)
         status.save
 
         tags.each { |tag_id|
@@ -197,19 +199,25 @@ class ChannelsController < ApplicationController
   def fetch_channel_tags
     response = HTTParty.get("http://127.0.0.1:10000/tag?forChannel=true")
 
-    @tags =JSON.parse(response.body)
+    if response.code === 200
+      @tags =JSON.parse(response.body)
+    end
   end
   
   def fetch_all_tags
     response = HTTParty.get("http://127.0.0.1:10000/tag")
   
-    return JSON.parse(response.body)
+    if response.code === 200
+      return JSON.parse(response.body)
+    end
   end
 
   def fetch_games_by_tag_id(tag_id)
     response = HTTParty.get("http://127.0.0.1:10000/game?tagId=" + tag_id.to_s)
   
-    return JSON.parse(response.body)
+    if response.code === 200
+      return JSON.parse(response.body)["games"]
+    end
   end
 
 
@@ -218,31 +226,39 @@ class ChannelsController < ApplicationController
     
     response = HTTParty.get("http://127.0.0.1:10000/language")
 
-    JSON.parse(response.body).each { |langauge|
-      @languages.append([langauge["name"], langauge["id"]])
-    }
+    if response.code === 200
+      JSON.parse(response.body).each { |langauge|
+        @languages.append([langauge["name"], langauge["id"]])
+      }
+    end
   end
   
   def fetch_language_by_id(id) 
     response = HTTParty.get("http://127.0.0.1:10000/language?id=" + id.to_s )
 
-    return JSON.parse(response.body)
+    if response.code === 200
+      return JSON.parse(response.body)
+    end
   end
 
   def fetch_channel_status_by_id(id)
     response = HTTParty.get("http://127.0.0.1:10000/status?id=" + id.to_s )
 
-    if (response.code === 200)
+    if response.code === 200
       return JSON.parse(response.body)
     end
   end
 
-  def fetch_new_channel_form_data
+  def fetch_new_channel_form_data    
+    @games = Array.new
+
     fetch_langauges()
     fetch_channel_tags()
     
     response = HTTParty.get("http://127.0.0.1:10000/game")
-    @games = JSON.parse(response.body)
+    if response.code === 200
+      @games = JSON.parse(response.body)["games"]
+    end
   end
 
 

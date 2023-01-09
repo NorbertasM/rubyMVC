@@ -7,7 +7,7 @@ class ChannelGamesController < ApplicationController
     response = HTTParty.get("http://127.0.0.1:10000/game")
 
     if response.code == 200 
-      @options = JSON.parse(response.body)
+      @options = JSON.parse(response.body)["games"]
     else
       flash[:alert] = "Error fetching games <br /> #{response.message}".html_safe
     end

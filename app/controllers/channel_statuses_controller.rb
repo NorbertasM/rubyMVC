@@ -3,7 +3,7 @@ class ChannelStatusesController < ApplicationController
 
   def create
     @channel_status = ChannelStatus.new(channel_status_params)
-    
+
     respond_to do |format|
       if @channel_status.save
         redirect_to channel_url(channel_status_params["channel_id"])
