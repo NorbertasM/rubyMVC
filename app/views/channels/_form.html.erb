@@ -37,7 +37,7 @@
   <% if !@languages.nil?%>
     <div class="form-group">
       <%= form.label "Stream Language", style: "display: block" %>
-      <%= select(:channel, :language_id, options_for_select(@languages, :selected => :language_id), { }, { :class => 'form-select' }) %>
+      <%= select(:channel, :language_id, options_for_select(@languages, :selected => current_user.channel.language_id || 41), { }, { :class => 'form-select' }) %>
     </div>
   <%end%>
 
