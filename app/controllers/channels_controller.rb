@@ -129,22 +129,36 @@ class ChannelsController < ApplicationController
   def create
     tags = channel_params["tags"]
     games = channel_params["games"]
-    @channel = Channel.new(channel_params.except("tags", "games").merge(user_id: current_user.id))
 
+    if !games.nil?
+      parsedGames = games.split(',').map(&:to_i)
+    end
+
+    logger.debug "-----Games----- #{parsedGames} #{parsedGames.class}"
+    @channel = Channel.new(channel_params.except("tags", "games").merge(user_id: current_user.id))
+    
     respond_to do |format|
       if @channel.save
         status = ChannelStatus.new(channel_id:@channel.id, status_id: 3)
         status.save
 
-        tags.each { |tag_id|
-          tag = ChannelTag.new(channel_id: @channel.id, tag_id: tag_id.to_i)
-          tag.save
-        }
-
-        games.each { |game_id|
-          game = ChannelGame.new(channel_id: @channel.id, game_id: game_id.to_i)
-          game.save
-        }
+        if !tags.nil?
+          tags.each { |tag_id|
+            if !tag_id.nil?
+              tag = ChannelTag.new(channel_id: @channel.id, tag_id: tag_id.to_i)
+              tag.save
+            end
+          }
+        end
+        
+        if !parsedGames.nil?
+          parsedGames.each { |game_id|
+            if !game_id.nil?
+              game = ChannelGame.new(channel_id: @channel.id, game_id: game_id.to_i)
+              game.save
+            end
+          }
+        end
 
         format.html { redirect_to channel_url(@channel), notice: "Channel was successfully created." }
         format.json { render :show, status: :created, location: @channel }
@@ -254,13 +268,19 @@ class ChannelsController < ApplicationController
 
     fetch_langauges()
     fetch_channel_tags()
-    
-    response = HTTParty.get("http://127.0.0.1:10000/game")
-    if response.code === 200
-      @games = JSON.parse(response.body)["games"]
+
+    if params["gameSearch"].nil?
+      response = HTTParty.get("http://127.0.0.1:10000/game")
+      if response.code === 200
+        @games = JSON.parse(response.body)["games"]
+      end
+    else
+      response = HTTParty.get("http://127.0.0.1:10000/search?by=game&value=" + params["gameSearch"])
+      if response.code === 200
+        @games = JSON.parse(response.body)
+      end
     end
   end
-
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -270,6 +290,6 @@ class ChannelsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def channel_params
-      params.require(:channel).permit(:title, :description, :stream_link, :preview_url, :user_id, :language_id, :about, :tags => [], :games => [])
+      params.require(:channel).permit(:title, :description, :stream_link, :preview_url, :user_id, :language_id, :about, :games, :tags => [])
     end
 end
