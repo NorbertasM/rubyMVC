@@ -108,14 +108,20 @@
           dropdown.removeChild(dropdown.lastChild);
         }
 
+        const currentGames = document.getElementById("games-input")?.value
+
+
         if (data) {
           for (var i = 0; i < data.length; i++) {
-            var option = document.createElement("option");
-            option.value = data[i].id;
-            option.innerText = data[i].name;
-            option.classList.add("option-className")
-            option.addEventListener('click', onOptionClick)
-            dropdown.appendChild(option);
+            if (!currentGames?.includes(data[i].id)) {
+              console.log(!currentGames?.includes(data[i].id))
+              var option = document.createElement("option");
+              option.value = data[i].id;
+              option.innerText = data[i].name;
+              option.classList.add("option-className")
+              option.addEventListener('click', onOptionClick)
+              dropdown.appendChild(option);
+            }
           }
         }
       })
@@ -131,14 +137,18 @@
         while (dropdown.firstChild) {
           dropdown.removeChild(dropdown.lastChild);
         }
+        
+        const currentGames = document.getElementById("games-input")?.value
 
         for (var i = 0; i < data.games.length; i++) {
-          var option = document.createElement("option");
-          option.value = data.games[i].id;
-          option.innerText = data.games[i].name;
-          option.classList.add("option-className")
-          option.addEventListener('click', onOptionClick)
-          dropdown.appendChild(option);
+          if (!currentGames.includes(data.games[i].id)) {
+            var option = document.createElement("option");
+            option.value = data.games[i].id;
+            option.innerText = data.games[i].name;
+            option.classList.add("option-className")
+            option.addEventListener('click', onOptionClick)
+            dropdown.appendChild(option);
+          }
         }
       })
     }
@@ -195,6 +205,15 @@
 
       gamesDiv.appendChild(item)
      }
+     
+    const dropdown = document.getElementById("myDropdown")
+
+    if (dropdown) {
+      console.log(dropdown.children)
+      const option = [...dropdown.children].map(item => {
+        if (item.value == id) item.remove()
+      })
+    }
    }
 
   function showDropdown() {
@@ -206,9 +225,12 @@
   }
 
   window.onclick = function(event) {
-    if (!event.target.matches('.games-search') && !event.target.matches('.option-className') && !event.target.matches('.dropdown')) {
-      if (document.getElementById("myDropdown").classList.contains("show")) {
-        hideDropdown()
+    const dropdown = document.getElementById("myDropdown")
+    if (dropdown) {
+      if (!event.target.matches('.games-search') && !event.target.matches('.option-className') && !event.target.matches('.dropdown')) {
+        if (dropdown.classList.contains("show")) {
+          hideDropdown()
+        }
       }
     }
   }
