@@ -8,10 +8,13 @@ export default class extends Controller {
     
     if (searchBox) {
       searchBox.addEventListener('keyup',(e) => onSearchKeydown(e))
+      searchBox.addEventListener('focus', () => showDropdown())
+      searchBox.addEventListener('click', () => showDropdown())
+      searchBox.addEventListener('blur', () => hideDropdown())
     }
 
     getDefaultData()
-    
+
     function onSearchKeydown(e) {
       const value = e.target?.value
     
@@ -143,15 +146,15 @@ export default class extends Controller {
       }
     }
 
+    function showDropdown() {
+      document.getElementById("myDropdown").classList.add("show");
+    }
+  
+    function hideDropdown() {
+      window.setTimeout(() => {
+        document.getElementById("myDropdown").classList.remove("show");
+      }, 100)
+    }
   }
 
-  showDropdown() {
-    document.getElementById("myDropdown").classList.add("show");
-  }
-
-  hideDropdown() {
-    window.setTimeout(() => {
-      document.getElementById("myDropdown").classList.remove("show");
-    }, 100)
-  }
 }
