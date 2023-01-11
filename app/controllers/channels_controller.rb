@@ -29,8 +29,8 @@ class ChannelsController < ApplicationController
       }
     end
 
-    @vip_channels = Array.new
-    @channels = Array.new
+    @live_channels = Array.new
+    @offline_channels = Array.new
     
     Channel.all.each { |channel|
       has_tag = @selected_tags.count == 0 || channel.channel_tags.any? { |channel_tag|
@@ -53,32 +53,36 @@ class ChannelsController < ApplicationController
 
       if (language_id.nil? || channel.language_id.to_i == language_id.to_i) && has_tag && has_game
       
+        preview_status = get_channel_status(channel.preview_statuses)
+        if !preview_status.nil?
+          channel.p_status = preview_status["id"]
+        else
+          channel.p_status = 0
+        end
         status = get_channel_status(channel.channel_status)
+
         if !status.nil?
           channel.status = status["id"] 
         else
           channel.status = 3
         end
 
-        preview_status = get_channel_status(channel.preview_statuses)
-
-        if !preview_status.nil? && preview_status["id"] == 1
-          channel.p_status = 0
-          @vip_channels.append(channel)
+        if channel.status === 3
+          @offline_channels.append(channel)
         else
-          if preview_status.nil?
-            channel.p_status = 0
-          else
-            channel.p_status = preview_status["id"]
-          end
-
-          @channels.append(channel)
+          @live_channels.append(channel)
         end
       end
     }
 
-    @vip_channels = @vip_channels.sort_by{|e| -e.status}
-    @channels = @channels.sort_by{|e| -e.status}
+
+    @live_channels = @live_channels.sort_by{|e|
+      e.p_status
+    }.reverse!
+
+    @offline_channels = @offline_channels.sort_by{|e|
+      e.p_status
+    }.reverse!
   end
 
   def show
@@ -134,7 +138,6 @@ class ChannelsController < ApplicationController
       parsedGames = games.split(',').map(&:to_i)
     end
 
-    logger.debug "-----Games----- #{parsedGames} #{parsedGames.class}"
     @channel = Channel.new(channel_params.except("tags", "games").merge(user_id: current_user.id))
     
     respond_to do |format|
