@@ -1,4 +1,4 @@
-<div id="channels">
+<div id="channels", data-controller="channels">
   <div class="mb-2">
     <label>Language</label>
     <%= select(
@@ -6,22 +6,7 @@
       {},
       options_for_select(@languages ,:selected => params[:language_id].to_i,  ),
       { :include_blank => true },
-      {
-        :onChange=>"
-          const params = new URLSearchParams(window.location.search)
-            if (this.value) {
-              if (!params.get('language_id')) {
-                params.append('language_id', this.value)
-              } else {
-                params.set('language_id', this.value)
-              }
-              window.location.search = params
-            } else if (params.get('language_id')) {
-              params.delete('language_id')
-              window.location.search = params
-            }
-          ",
-      }
+      { :id => "language-select" }
     ) %>
 
     
@@ -31,15 +16,7 @@
       {},
       options_for_select(@option_tags  ),
       { :include_blank => true },
-      {
-        :onChange=>"
-          const params = new URLSearchParams(window.location.search)
-            if (this.value) {
-              params.append('tag_id[]', this.value)
-              window.location.search = params
-            }
-          ",
-      }
+      { :id=>"tags-select" }
     ) %>
   </div>
 
