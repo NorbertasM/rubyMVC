@@ -55,12 +55,12 @@
   </span>
 
   <div class="row justify-content-md-start gy-2 mb-4">
-    <% @vip_channels.each do |channel| %>
+    <% @live_channels.each do |channel| %>
       <div class="col-md-3">
         <%= render channel %>
       </div>
     <% end %>
-     <% @channels.each do |channel| %>
+     <% @offline_channels.each do |channel| %>
       <div class="col-md-3">
         <%= render channel %>
       </div>
