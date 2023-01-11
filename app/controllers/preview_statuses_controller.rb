@@ -9,7 +9,7 @@ class PreviewStatusesController < ApplicationController
 
   def create
     valid_until = DateTime.now.months_since(preview_status_params[:duration].to_i)
-    @preview_status = PreviewStatus.new(valid_until: valid_until, channel_id: current_user.channel.id, status_id: 17)
+    @preview_status = PreviewStatus.new(valid_until: valid_until, channel_id: current_user.channel.id, status_id: 1)
 
     if @preview_status.save
       redirect_to channel_path(current_user.channel.id)

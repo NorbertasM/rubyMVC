@@ -54,7 +54,7 @@
             <div  class="col">
               <%= link_to "Manage Tags", new_channel_tag_path, class:"btn btn-sm btn-outline-primary" %>
             </div>
-            <% if @preview.nil? || @preview["id"] != 17%> 
+            <% if @preview.nil? || @preview["id"] != 1%> 
               <div class="col">
                 <%= link_to "Order Premium!", new_preview_status_path, class:"btn btn-sm btn-primary" %>
               </div>
@@ -65,16 +65,16 @@
       <div class="col-md-4 box text-end">
         <div>
           <% if @channel.user != current_user %>
-             <% if @status.nil? || @status["id"] != 16 %>
+             <% if @status.nil? || @status["id"] != 2 %>
               <%= button_to "Offline", {}, class:"btn btn-sm btn-outline-danger", :disabled => true %>
             <% else %>
               <%= link_to "Watch Live!", @channel.stream_link, class:"btn btn-sm btn-primary", target: :_blank %>
             <% end %>
           <% else %>
-            <% if @status.nil? || @status["id"] != 16 %>
-              <%= button_to "Go Live!", { :controller => 'channel_statuses', :channel_id => @channel.id, :status_id => 16}, :method => :post, class: "btn btn-sm btn-success" %> 
+            <% if @status.nil? || @status["id"] != 2 %>
+              <%= button_to "Go Live!", { :controller => 'channel_statuses', :channel_id => @channel.id, :status_id => 2}, :method => :post, class: "btn btn-sm btn-success" %> 
             <% else %>
-              <%= button_to "Go Offline!", { :controller => 'channel_statuses', :channel_id => @channel.id, :status_id => 15}, :method => :post, class: "btn btn-sm btn-danger" %> 
+              <%= button_to "Go Offline!", { :controller => 'channel_statuses', :channel_id => @channel.id, :status_id => 3}, :method => :post, class: "btn btn-sm btn-danger" %> 
             <% end %>
           <% end %>
         </div>
