@@ -1,4 +1,14 @@
 <div id="games">
+
+  <div class="row">
+    <div class="col-24">
+      <form class="d-flex mb-3 w-25" role="search">
+        <input class="form-control me-2" type="search" placeholder="Games search" name="value">
+        <button class="btn btn-primary" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+
   <div class="row gy-2">
     <% @games.each do |item| %>
       <div class="col">
@@ -18,25 +28,27 @@
     <% end %>
   </div>
 </div>
-page: <%= @page%>
-<div class="row" data-controller="games" data-count=<%=@count%>>
-  <nav aria-label="Page navigation example">
-    <ul class="pagination custom-pagination">
-      <li class="page-item">
-        <button class="page-link" aria-label="Previous" data-action="click->games#previousPage">
-          <span aria-hidden="true">&laquo;</span>
-        </button>
-      </li>
-      <% for i in 1...(@count/ 20) do %>
+<% if !@page.nil? && !@count.nil?%>
+  page: <%= @page%>
+  <div class="row" data-controller="games" data-count=<%=@count%>>
+    <nav aria-label="Page navigation example">
+      <ul class="pagination custom-pagination">
         <li class="page-item">
-          <button class="page-link" data-action="click->games#onPageSelect" id=<%=i%>><%= i%></button>
+          <button class="page-link" aria-label="Previous" data-action="click->games#previousPage">
+            <span aria-hidden="true">&laquo;</span>
+          </button>
         </li>
-      <% end %>
-      <li class="page-item">
-        <button class="page-link" aria-label="Next"  data-action="click->games#nextPage">
-          <span aria-hidden="true">&raquo;</span>
-        </button>
-      </li>
-    </ul>
-  </nav>
-</div>
+        <% for i in 1...(@count/ 20) do %>
+          <li class="page-item">
+            <button class="page-link" data-action="click->games#onPageSelect" id=<%=i%>><%= i%></button>
+          </li>
+        <% end %>
+        <li class="page-item">
+          <button class="page-link" aria-label="Next"  data-action="click->games#nextPage">
+            <span aria-hidden="true">&raquo;</span>
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+<%end%>
