@@ -18,3 +18,25 @@
     <% end %>
   </div>
 </div>
+page: <%= @page%>
+<div class="row" data-controller="games" data-count=<%=@count%>>
+  <nav aria-label="Page navigation example">
+    <ul class="pagination custom-pagination">
+      <li class="page-item">
+        <button class="page-link" aria-label="Previous" data-action="click->games#previousPage">
+          <span aria-hidden="true">&laquo;</span>
+        </button>
+      </li>
+      <% for i in 1...(@count/ 20) do %>
+        <li class="page-item">
+          <button class="page-link" data-action="click->games#onPageSelect" id=<%=i%>><%= i%></button>
+        </li>
+      <% end %>
+      <li class="page-item">
+        <button class="page-link" aria-label="Next"  data-action="click->games#nextPage">
+          <span aria-hidden="true">&raquo;</span>
+        </button>
+      </li>
+    </ul>
+  </nav>
+</div>
