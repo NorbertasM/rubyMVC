@@ -8,6 +8,10 @@ class ChannelsController < ApplicationController
     language_id = params["language_id"]
     param_tags = params["tag_id"]
 
+    if !game_id.nil?
+      @game = fetch_game_by_id(game_id)
+    end
+
     fetch_langauges()
 
     tags = fetch_all_tags()
@@ -128,6 +132,7 @@ class ChannelsController < ApplicationController
 
   def edit
     fetch_langauges()
+    @Hide_games = true
   end
   
   def create
@@ -282,6 +287,15 @@ class ChannelsController < ApplicationController
       if response.code === 200
         @games = JSON.parse(response.body)
       end
+    end
+  end
+
+   
+  def fetch_game_by_id(id)
+    response = HTTParty.get("http://127.0.0.1:10000/game?id=" + id.to_s)
+  
+    if response.code === 200
+      return JSON.parse(response.body)
     end
   end
 

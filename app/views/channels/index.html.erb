@@ -32,6 +32,9 @@
   </span>
 
   <div class="row justify-content-md-start gy-2 mb-4">
+   <% if !@game.nil? %>
+    <h1>Streamers who stream: <%= @game["name"]%></h1>
+   <%end%>
     <% @live_channels.each do |channel| %>
       <div class="col-md-3">
         <%= render channel %>

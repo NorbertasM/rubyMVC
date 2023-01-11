@@ -1,4 +1,4 @@
-<%= form_with(model: channel, data: { controller: "games" } ) do |form| %> 
+<%= form_with(model: channel, data: { controller: "channelForm" } ) do |form| %> 
   <% if channel.errors.any? %>
     <%= render layout: 'shared/error_modal' do %>
       <ul>
@@ -35,15 +35,16 @@
   </div>
 
   
+  
  <%= form.hidden_field :games, id: "games-input" %> 
-
-  <div class="dropdown mt-2">
-    <input class="form-control games-search" type="text" id="games-search" placeholder="Click to add Games"> 
-    <div id="myDropdown" class="dropdown-content">
+  <%if @Hide_games.nil? %>
+    <div class="dropdown mt-2">
+      <input class="form-control games-search" type="text" id="games-search" placeholder="Click to add Games"> 
+      <div id="myDropdown" class="dropdown-content">
+      </div>
     </div>
-  </div>
-
   <div id="games-div" class="my-1 py-2 border-bottom"> </div>
+  <%end%>
 
   <% if !@languages.nil?%>
     <div class="form-group">
