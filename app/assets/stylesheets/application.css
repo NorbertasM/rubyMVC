@@ -97,3 +97,13 @@
 .show {
   display:block;
 }
+
+.no-border {
+  border: unset;
+}
+
+.games-tags {
+  width: 80%;
+  display: flex;
+  flex-wrap: wrap;
+}
